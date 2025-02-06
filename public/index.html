@@ -23,7 +23,7 @@
   </div>
 
   <script>
-   async function getAnswer() {
+  async function getAnswer() {
   const query = document.getElementById('query').value;
   if (query.trim() === '') {
     alert('Please enter a question!');
@@ -35,7 +35,8 @@
   responseDiv.classList.add('loading');
 
   try {
-    const response = await fetch('http://localhost:3000/process', { // This is where your backend is running
+    // Update this URL to use a relative path so it works both locally and on Render
+    const response = await fetch('/process', {  // Relative path to the API endpoint
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
