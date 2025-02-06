@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Answer Fetching API</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Ask Your Question</h1>
+      <p>Get real-time answers from the web instantly. Just ask away!</p>
+    </header>
+    <div class="form-container">
+      <input type="text" id="query" placeholder="Enter your question..." aria-label="Ask your question">
+      <button onclick="getAnswer()" aria-label="Submit question">Submit</button>
+    </div>
+    <div id="response" class="response">
+      <!-- The response will be displayed here -->
+    </div>
+  </div>
+
+  <script>
+    async function getAnswer() {
+      const query = document.getElementById('query').value;
+      if (query.trim() === '') {
+        alert('Please enter a question!');
+        return;
+      }
+
+      const responseDiv = document.getElementById('response');
+      responseDiv.textContent = 'Fetching answer...';
+      responseDiv.classList.add('loading');
+
+      try {
+        const response = await fetch('http://localhost:3000/process', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: query }),
+        });
+        
+        const data = await response.json();
+        responseDiv.classList.remove('loading');
+        
+        if (data.response) {
+          responseDiv.textContent = data.response;
+        } else {
+          responseDiv.textContent = 'No answer found.';
+        }
+      } catch (error) {
+        responseDiv.classList.remove('loading');
+        responseDiv.textContent = 'An error occurred. Please try again later.';
+      }
+    }
+  </script>
+</body>
+</html>
