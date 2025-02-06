@@ -1,11 +1,19 @@
 const express = require('express');
 const axios = require('axios');
-require('dotenv').config();  // Load API key from .env file
+const cors = require('cors');  // Import the CORS middleware
+require('dotenv').config();  // Load environment variables from .env file
 
 const app = express();
 const port = process.env.PORT || 3000;  // Ensure it's running on the expected port
 
-// Serve static files from the 'public' directory
+// CORS Configuration - Allow requests from all origins (or just localhost for local testing)
+app.use(cors({
+  origin: '*',  // Allow all origins, suitable for your Render deployment
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
+
+// Serve static files from the 'public' directory (index.html, CSS, JS)
 app.use(express.static('public'));  // This serves index.html and other static files like CSS, JS
 
 // Get SerpAPI key from .env file
@@ -38,12 +46,6 @@ const fetchAnswerFromWeb = async (query) => {
     return 'An error occurred while fetching the answer.';
   }
 };
-
-// Root route to check if the server is up (this is now handled by serving the index.html)
-app.get('/', (req, res) => {
-  console.log("Root route hit!");  // Log to check if the route is being accessed
-  res.sendFile(__dirname + '/public/index.html');  // Serve index.html from the 'public' folder
-});
 
 // POST route to handle user input and get web response
 app.post('/process', async (req, res) => {

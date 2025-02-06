@@ -23,39 +23,41 @@
   </div>
 
   <script>
-    async function getAnswer() {
-      const query = document.getElementById('query').value;
-      if (query.trim() === '') {
-        alert('Please enter a question!');
-        return;
-      }
+   async function getAnswer() {
+  const query = document.getElementById('query').value;
+  if (query.trim() === '') {
+    alert('Please enter a question!');
+    return;
+  }
 
-      const responseDiv = document.getElementById('response');
-      responseDiv.textContent = 'Fetching answer...';
-      responseDiv.classList.add('loading');
+  const responseDiv = document.getElementById('response');
+  responseDiv.textContent = 'Fetching answer...';
+  responseDiv.classList.add('loading');
 
-      try {
-        const response = await fetch('http://localhost:3000/process', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text: query }),
-        });
-        
-        const data = await response.json();
-        responseDiv.classList.remove('loading');
-        
-        if (data.response) {
-          responseDiv.textContent = data.response;
-        } else {
-          responseDiv.textContent = 'No answer found.';
-        }
-      } catch (error) {
-        responseDiv.classList.remove('loading');
-        responseDiv.textContent = 'An error occurred. Please try again later.';
-      }
+  try {
+    const response = await fetch('http://localhost:3000/process', { // This is where your backend is running
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: query }),
+    });
+
+    const data = await response.json();
+    responseDiv.classList.remove('loading');
+
+    if (data.response) {
+      responseDiv.textContent = data.response;
+    } else {
+      responseDiv.textContent = 'No answer found.';
     }
-  </script>
+  } catch (error) {
+    responseDiv.classList.remove('loading');
+    responseDiv.textContent = 'An error occurred. Please try again later.';
+  }
+}
+
+</script>
+
 </body>
 </html>
